@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 
 var router = express.Router();
 
-var postController = require("../module/postController/postController")
+var postController = require('../module/postController/postController')
 
 router.use(bodyParser.urlencoded({extended: false}))
 
