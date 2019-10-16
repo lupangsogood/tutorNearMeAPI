@@ -127,7 +127,7 @@ const addUser = (req,res) =>{
                     res.json({
                         "head":200,
                         "body":[rows],
-                        "message":"เพิ่มข้อมูลไม่สำเร็จ"
+                        "message":result.message
                     });
                 }else{
                     req.body["users_id"] = rows.insertId
