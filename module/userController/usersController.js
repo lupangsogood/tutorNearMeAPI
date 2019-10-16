@@ -155,15 +155,18 @@ const addUserProfile = (req,res) =>{
         let profile_lastname =req.body.profile_lastname
         let profile_email = req.body.profile_email
         let profile_image = req.body.profile_image
+        let profile_phone = req.body.profile_phone
+        let level_id = req.body.level_id
         let sex_id = req.body.sex_id
         let role_id = req.body.role_id
         let users_id = req.body.users_id
 
+        console.log(req.body)
 
-        sqlAddProfile = `INSERT INTO profile (profile_name,profile_lastname,profile_email,profile_image,sex_id,role_id,users_id)  VALUES (?,?,?,?,?,?,?)`
+        sqlAddProfile = `INSERT INTO profile (profile_name,profile_lastname,profile_email,profile_image,profile_phone,level_id,sex_id,role_id,users_id)  VALUES (?,?,?,?,?,?,?,?,?)`
         // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
 
-        dbConn.query(sqlAddProfile,[profile_name,profile_lastname,profile_email,profile_image,sex_id,role_id,users_id],(err,rows,result)=>{
+        dbConn.query(sqlAddProfile,[profile_name,profile_lastname,profile_email,profile_image,profile_phone,level_id,sex_id,role_id,users_id],(err,rows,result)=>{
             if (err) {
                 console.log(err)
                 res.json({
@@ -174,7 +177,7 @@ const addUserProfile = (req,res) =>{
             }else{
                 // console.log(rows)
         sqlFetchProfile = `Select profile_id,
-                            profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${users_id}" ORDER BY profile_id DESC LIMIT 1 `                
+                            profile_name,profile_lastname,profile_email,profile_image,profile_phone,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${users_id}" ORDER BY profile_id DESC LIMIT 1 `                
         dbConn.query(sqlFetchProfile,(err,rows,result)=>{
                     if (rows.length === 0) {
                         res.json({
@@ -210,6 +213,8 @@ const editProfile = (req, res)=>{
         let profile_lastname =req.body.profile_lastname
         let profile_email = req.body.profile_email
         let profile_image = req.body.profile_image
+        let profile_phone = req.body.profile_phone
+        let level_id = req.body.level_id
         let sex_id = req.body.sex_id
         let role_id = req.body.role_id
         let users_id = req.body.users_id
@@ -219,7 +224,8 @@ const editProfile = (req, res)=>{
                         SET profile_name ="${profile_name}",
                             profile_lastname = "${profile_lastname}",
                             profile_email = "${profile_email}",
-                            profile_image = "${profile_image}"
+                            profile_image = "${profile_image}",
+                            profile_phone = "${profile_phone}",
                             WHERE users_id = ${users_id}`
         // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
 
@@ -234,7 +240,7 @@ const editProfile = (req, res)=>{
             }else{
                 // console.log(rows)
                 sqlFetchProfile = `Select profile_id,
-                            profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${users_id}" ORDER BY profile_id DESC LIMIT 1 `                
+                            profile_name,profile_lastname,profile_email,profile_image,profile_phone,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${users_id}" ORDER BY profile_id DESC LIMIT 1 `                
         dbConn.query(sqlFetchProfile,(err,rows,result)=>{
                     if (rows.length === 0) {
                         res.json({
