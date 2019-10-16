@@ -58,7 +58,7 @@ const fetchProfile = (req, res) =>{
     try {
         let users_username =req.body.users_username
         let users_password = req.body.users_password
-        sqlFetchProfile = `SELECT profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_id
+        sqlFetchProfile = `SELECT profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_id,users_id
 
         FROM profile INNER JOIN users ON profile.users_id = users.users_id 
         INNER JOIN sex ON profile.sex_id = sex.sex_id
@@ -246,7 +246,7 @@ const editProfile = (req, res)=>{
                     res.json({
                         "head":200,
                         "body":rows,
-                        "message":"เพิ่มข้อมูลส่วนตัวสำเร็จ"
+                        "message":"แก้ไขข้อมูลส่วนตัวสำเร็จ"
                     });
                     }
                 });    
