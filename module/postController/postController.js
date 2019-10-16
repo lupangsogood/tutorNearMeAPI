@@ -77,10 +77,12 @@ const fetchPost =(req, res)=>{
             }
         })
     } catch (error) {
-        
+        res.json({
+            "head":404,
+            "body":rows,
+            "message":error.message
+        })
     }
 }
-
-
 
 module.exports = {addPost,fetchPost};
