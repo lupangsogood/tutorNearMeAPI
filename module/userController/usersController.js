@@ -31,7 +31,7 @@ const checkUserLogin = (req,res) =>{
                 console.log(rows.length)
                 if (rows.length === 0) {
                     res.json({
-                        "head":200,
+                        "head":500,
                         "body":rows,
                         "message":"ไม่พบรายชื่อ"
                     });
@@ -76,7 +76,7 @@ const fetchProfile = (req, res) =>{
                 console.log(rows.length)
                 if (rows.length === 0) {
                     res.json({
-                        "head":200,
+                        "head":500,
                         "body":rows,
                         "message":"ไม่พบข้อมูลส่วนตัว"
                     });
@@ -125,9 +125,9 @@ const addUser = (req,res) =>{
                 console.log(rows)
                 if (rows.length === 0) {
                     res.json({
-                        "head":200,
+                        "head":500,
                         "body":[rows],
-                        "message":result.message
+                        "message":"เพิ่มข้อมูลส่วนตัวไม่สำเร็จ"
                     });
                 }else{
                     req.body["users_id"] = rows.insertId
