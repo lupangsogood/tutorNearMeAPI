@@ -1,12 +1,12 @@
 const dbConn = require('../../connectDB')
 
-dbConn.getConnection(function(err){
-    if (err) {
-        console.log(err.stack)
-        throw err
-    }
-    console.log("connected")
-});
+// dbConn.getConnection(function(err){
+//     if (err) {
+//         console.log(err.stack)
+//         throw err
+//     }
+//     console.log("connected")
+// });
 
 
 // CHECK AND FETCH 
