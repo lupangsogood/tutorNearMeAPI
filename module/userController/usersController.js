@@ -120,14 +120,14 @@ const addUser = (req,res) =>{
                 if (rows.length === 0) {
                     res.json({
                         "head":200,
-                        "body":rows,
+                        "body":[rows],
                         "message":"เพิ่มข้อมูลไม่สำเร็จ"
                     });
                 }else{
                     req.body["users_id"] = rows.insertId
                     res.json({
                         "head":200,
-                        "body":req.body,
+                        "body":[req.body],
                         "message":"เพิ่มข้อมูลส่วนตัวสำเร็จ"
                     });
             }
