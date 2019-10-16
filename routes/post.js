@@ -7,8 +7,8 @@ var postController = require("../module/postController/postController")
 
 router.use(bodyParser.urlencoded({extended: false}))
 
-router.use('/addPost',postController.addPost)
+router.post('/addPost',postController.addPost)
 
-router.use('/fetchPost',postController.fetchPost)
+router.post('/fetchPost',postController.fetchPost)
 
 module.exports = router;
