@@ -56,9 +56,13 @@ const fetchProfile = (req, res) =>{
     console.log(req.body)
 
     try {
-        let users_id =req.body.users_id
-        sqlFetchProfile = `Select profile_id,
-                            profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${users_id}" ORDER BY profile_id DESC LIMIT 1 `
+        let users_username =req.body.users_username
+        let users_password = req.body.users_password
+        sqlFetchProfile = `SELECT profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_id
+
+        FROM profile INNER JOIN users ON profile.users_id = users.users_id 
+        INNER JOIN sex ON profile.sex_id = sex.sex_id
+        WHERE users.users_name = "${users_username}" AND users.users_password = "${users_password}"`
  
         dbConn.query(sqlFetchProfile,(err,rows,result)=>{
             if (err) {
@@ -77,11 +81,13 @@ const fetchProfile = (req, res) =>{
                         "message":"ไม่พบข้อมูลส่วนตัว"
                     });
                 }else{
+                
                 res.json({
                     "head":200,
                     "body":rows,
                     "message":"ข้อมูลส่วนตัว"
                 });
+
             }
         }
         });
