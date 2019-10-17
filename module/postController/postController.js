@@ -56,10 +56,17 @@ const addPost = (req, res)=>{
 const fetchPost =(req, res)=>{
     console.log(req.body)
     try {
+        let sex_id = req.body.sex_id
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
         
-        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,profile_name,profile_lastname FROM post INNER JOIN level ON  post.level_id = level.level_id INNER JOIN subject ON post.subject_id = subject.subject_id JOIN profile ON post.users_id = profile.users_id WHERE post.subject_id ="${subject_id}" AND post.level_id ="${level_id}"` 
+        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,profile_name,profile_lastname,sex_name_th FROM post 
+        INNER JOIN level ON  post.level_id = level.level_id 
+        INNER JOIN subject ON post.subject_id = subject.subject_id 
+        INNER JOIN profile ON post.users_id = profile.users_id 
+        INNER JOIN sex ON post.sex_id = sex.sex_id
+        WHERE post.subject_id ="${subject_id}" AND post.level_id ="${level_id}" AND post.sex_id ="${sex_id}"
+        GROUP BY post.post_id` 
         
         dbConn.query(sqlFetchPost,(err,rows,result)=>{
             if (err) {
