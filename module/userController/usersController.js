@@ -225,7 +225,7 @@ const editProfile = (req, res)=>{
                             profile_lastname = "${profile_lastname}",
                             profile_email = "${profile_email}",
                             profile_image = "${profile_image}",
-                            profile_phone = "${profile_phone}",
+                            profile_phone = "${profile_phone}"
                             WHERE users_id = ${users_id}`
         // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
 
