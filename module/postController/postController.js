@@ -60,7 +60,7 @@ const fetchPost =(req, res)=>{
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
         
-        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,profile_name,profile_lastname,sex_name_th FROM post 
+        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
