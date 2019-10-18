@@ -21,7 +21,7 @@ const addPost = (req, res)=>{
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
         let place = req.body.place
-        let sexName = req.body.sexId
+        let sexName = req.body.sex_id
         let users_id = req.body.users_id
     
         let sexId
