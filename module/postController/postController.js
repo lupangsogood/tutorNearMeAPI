@@ -21,11 +21,23 @@ const addPost = (req, res)=>{
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
         let place = req.body.place
+        let sexName = req.body.sexId
         let users_id = req.body.users_id
     
-        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id, place, users_id) VALUES (?,?, ?, ?, ?,?)`
+        let sexId
+        switch (sexName) {
+            case "ชาย":
+                sexId = 1
+                break;
+            case "หญิง":
+                sexId = 2
+            default:
+                break;
+        }
+
+        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id, place,sex_id users_id) VALUES (?,?,?, ?, ?, ?,?)`
     
-        dbConn.query(sqlAddPost,[post_date,post_time,subject_id,level_id,place,users_id],(err,rows,result)=>{
+        dbConn.query(sqlAddPost,[post_date,post_time,subject_id,level_id,place,sexId,users_id],(err,rows,result)=>{
             if (err) {
                 res.json({
                     "head":500,
