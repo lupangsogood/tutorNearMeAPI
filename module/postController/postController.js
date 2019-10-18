@@ -92,4 +92,43 @@ const fetchPost =(req, res)=>{
     }
 }
 
-module.exports = {addPost,fetchPost};
+const fetchPostTutor = (req,res) =>{
+    console.log(req.body)
+    try {
+        let usersId = req.body.tutorId
+
+        sqlFetchPostTutor = `SELECT post_id,post_date,subject_name_th,level_name_th,place,profile_name,profile_lastname,sex_name_th FROM post 
+        INNER JOIN level ON  post.level_id = level.level_id 
+        INNER JOIN subject ON post.subject_id = subject.subject_id 
+        INNER JOIN profile ON post.users_id = profile.users_id 
+        INNER JOIN sex ON post.sex_id = sex.sex_id
+        WHERE post.users_id = "${usersId}"
+        GROUP BY post.post_id`
+
+        dbConn.query(sqlFetchPostTutor,(err,rows,result)=>{
+            if (err) {
+                console.log(err.message)
+                res.json({
+                    "head":500,
+                    "body":rows,
+                    "message":err.message
+                })
+            }else{
+                res.json({
+                    "head":200,
+                    "body":rows,
+                    "message":"ดึงข้อมูลสำเร็จ"
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error.message)
+        res.json({
+            "head":404,
+            "body":rows,
+            "message":error.message
+        })
+    }
+}
+
+module.exports = {addPost,fetchPost,fetchPostTutor};

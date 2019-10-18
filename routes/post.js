@@ -9,5 +9,5 @@ router.use(bodyParser.urlencoded({extended: false}))
 
 router.post('/addPost',postController.addPost)
 router.post('/fetchPost',postController.fetchPost)
-
+router.post('/tutor/fetchPost',postController.fetchPostTutor)
 module.exports = router;
