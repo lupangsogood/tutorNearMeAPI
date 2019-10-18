@@ -35,7 +35,7 @@ const addPost = (req, res)=>{
                 break;
         }
 
-        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id, place,sex_id users_id) VALUES (?,?,?, ?, ?, ?,?)`
+        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id, place,sex_id,users_id) VALUES (?,?,?, ?, ?, ?,?)`
     
         dbConn.query(sqlAddPost,[post_date,post_time,subject_id,level_id,place,sexId,users_id],(err,rows,result)=>{
             if (err) {
