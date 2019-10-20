@@ -150,8 +150,13 @@ const fetchDetailtutor = (req, res) => {
 
         let postId = req.body.post_id
         
-        sqlFetchDetailTutor = `select * from profile INNER JOIN post ON profile.users_id = post.users_id 
-        WHERE post.post_id = "${postId}" ORDER BY profile_id desc LIMIT 1  `
+        sqlFetchDetailTutor = `SELECT profile_image,profile_name,profile_lastname,sex_name_th,level_name_th,subject_name_th,place,profile_phone
+        FROM post
+        INNER JOIN profile ON post.users_id = profile.users_id
+        INNER JOIN level ON post.level_id = level.level_id
+        INNER JOIN subject ON post.subject_id = subject.subject_id
+        INNER JOIN sex ON post.sex_id = sex.sex_id
+        WHERE post_id = "${postId}"`
 
         dbConn.query(sqlFetchDetailTutor,(err,rows,result)=>{
             if (err) {
