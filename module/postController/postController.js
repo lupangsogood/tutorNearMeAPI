@@ -151,7 +151,7 @@ const fetchDetailtutor = (req, res) => {
         let postId = req.body.post_id
         
         sqlFetchDetailTutor = `select * from profile INNER JOIN post ON profile.users_id = post.users_id 
-        WHERE post.post_id = "${postId}"`
+        WHERE post.post_id = "${postId}" ORDER BY profile_id desc LIMIT 1  `
 
         dbConn.query(sqlFetchDetailTutor,(err,rows,result)=>{
             if (err) {
