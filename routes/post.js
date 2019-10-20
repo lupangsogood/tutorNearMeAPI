@@ -10,4 +10,5 @@ router.use(bodyParser.urlencoded({extended: false}))
 router.post('/addPost',postController.addPost)
 router.post('/fetchPost',postController.fetchPost)
 router.post('/tutor/fetchPost',postController.fetchPostTutor)
+router.post('/tutor/fetchDetail',postController.fetchDetailtutor)
 module.exports = router;
