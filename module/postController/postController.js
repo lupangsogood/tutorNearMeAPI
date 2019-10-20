@@ -148,7 +148,7 @@ const fetchDetailtutor = (req, res) => {
 
     try {
 
-        let postId = post.body.post_id
+        let postId = req.body.post_id
         
         sqlFetchDetailTutor = `select * from profile INNER JOIN post ON profile.users_id = post.users_id 
         WHERE post.post_id = "${postId}"`
