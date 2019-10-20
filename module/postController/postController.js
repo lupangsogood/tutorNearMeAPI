@@ -20,6 +20,7 @@ const addPost = (req, res)=>{
         let post_time = time_gmt7
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
+        let degree = req.body.post_degree
         let place = req.body.place
         let sexName = req.body.sex_id
         let users_id = req.body.users_id
@@ -35,9 +36,9 @@ const addPost = (req, res)=>{
                 break;
         }
 
-        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id, place,sex_id,users_id) VALUES (?,?,?, ?, ?, ?,?)`
+        sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id,post_degree, place,sex_id,users_id) VALUES (?,?,?,?, ?, ?, ?,?)`
     
-        dbConn.query(sqlAddPost,[post_date,post_time,subject_id,level_id,place,sexId,users_id],(err,rows,result)=>{
+        dbConn.query(sqlAddPost,[post_date,post_time,subject_id,level_id,degree,place,sexId,users_id],(err,rows,result)=>{
             if (err) {
                 res.json({
                     "head":500,
@@ -72,7 +73,7 @@ const fetchPost =(req, res)=>{
         let subject_id = req.body.subject_id
         let level_id = req.body.level_id
         
-        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,profile_name,profile_lastname,sex_name_th FROM post 
+        sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -88,11 +89,20 @@ const fetchPost =(req, res)=>{
                     "message":err.message
                 })
             }else{
-                res.json({
-                    "head":200,
-                    "body":rows,
-                    "message":"ดึงข้อมูลสำเร็จ"
-                })
+                if (rows.length > 0) {
+                    res.json({
+                        "head":200,
+                        "body":rows,
+                        "message":"ดึงข้อมูลสำเร็จ"
+                    })
+                }else{
+                    res.json({
+                        "head":200,
+                        "body":rows,
+                        "message":"ไม่พบข้อมูล"
+                    })
+                }
+                
             }
         })
     } catch (error) {
@@ -126,11 +136,19 @@ const fetchPostTutor = (req,res) =>{
                     "message":err.message
                 })
             }else{
-                res.json({
-                    "head":200,
-                    "body":rows,
-                    "message":"ดึงข้อมูลสำเร็จ"
-                })
+                if (rows.length > 0) {
+                    res.json({
+                        "head":200,
+                        "body":rows,
+                        "message":"ดึงข้อมูลสำเร็จ"
+                    })
+                }else{
+                    res.json({
+                        "head":200,
+                        "body":rows,
+                        "message":"ไม่พบข้อมูล"
+                    })
+                }
             }
         })
     } catch (error) {
