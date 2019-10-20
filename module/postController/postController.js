@@ -79,7 +79,8 @@ const fetchPost =(req, res)=>{
         INNER JOIN profile ON post.users_id = profile.users_id 
         INNER JOIN sex ON post.sex_id = sex.sex_id
         WHERE post.subject_id ="${subject_id}" AND post.level_id ="${level_id}" AND post.sex_id ="${sex_id}"
-        GROUP BY post.post_id` 
+        GROUP BY post.post_id
+        ORDER BY post.post_date DESC` 
         
         dbConn.query(sqlFetchPost,(err,rows,result)=>{
             if (err) {
