@@ -1,6 +1,7 @@
 const dbConn = require("../../connectDB");
 const moment = require("moment-timezone");
 const publicIp = require("public-ip");
+var mv = require("mv");
 
 var formidable = require("formidable");
 var fs = require("fs");
@@ -40,7 +41,7 @@ const addPayment = (req, res) => {
       //   console.log(oldpath);
       //   console.log(newPath);
       payment_image = url + "/image/" + files.payment_image.name;
-      fs.rename(oldpath, newPath, err => {
+      mv(oldpath, newPath, err => {
         if (err) throw err;
         try {
           sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?,?)`;
