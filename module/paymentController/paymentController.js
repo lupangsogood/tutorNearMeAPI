@@ -24,6 +24,7 @@ const addPayment = (req, res) => {
 
     let payment_date = fields.payment_date;
     let payment_time = fields.payment_time;
+    let payment_course_id = fields.payment_course_id;
     let payment_amount = fields.payment_amount;
     let payment_name = fields.payment_name;
     let payment_student_id = fields.payment_student_id;
@@ -38,13 +39,14 @@ const addPayment = (req, res) => {
       fs.rename(oldpath, newPath, err => {
         if (err) throw err;
         try {
-          sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?)`;
+          sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?,?)`;
 
           dbConn.query(
             sqlAddPayment,
             [
               payment_date,
               payment_time,
+              payment_course_id,
               payment_amount,
               payment_name,
               payment_student_id,

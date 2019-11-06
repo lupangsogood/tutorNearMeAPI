@@ -183,7 +183,7 @@ const fetchDetailtutor = (req, res) => {
   try {
     let postId = req.body.post_id;
 
-    sqlFetchDetailTutor = `SELECT profile_image,profile_name,profile_lastname,sex_name_th,level_name_th,subject_name_th,post_degree,place,profile_phone
+    sqlFetchDetailTutor = `SELECT profile_image,profile_name,profile_lastname,sex_name_th,level_name_th,subject_name_th,post_degree,place,profile_phone,post.users_id,post.subject_id
         FROM post
         INNER JOIN profile ON post.users_id = profile.users_id
         INNER JOIN level ON post.level_id = level.level_id
