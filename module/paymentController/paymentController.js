@@ -1,5 +1,7 @@
 const dbConn = require("../../connectDB");
 const moment = require("moment-timezone");
+const publicIp = require("public-ip");
+
 var formidable = require("formidable");
 var fs = require("fs");
 const path = require("path");
@@ -15,7 +17,6 @@ const time_gmt7 = moment()
   .format("HH:mm:ss");
 
 const addPayment = (req, res) => {
-  console.log("TEST FORMDATA");
   console.log(req.headers.host);
   let url = req.headers.host;
   var form = new formidable.IncomingForm();
@@ -30,6 +31,9 @@ const addPayment = (req, res) => {
     let payment_student_id = fields.payment_student_id;
     let payment_tutor_id = fields.payment_tutor_id;
     let payment_image = "";
+
+    var date = new Date(payment_date);
+    var dateFormatted = moment(date).format("MM/DD/YYYY");
     try {
       var oldpath = files.payment_image.path;
       var newPath = directoryPath + files.payment_image.name;
@@ -44,7 +48,7 @@ const addPayment = (req, res) => {
           dbConn.query(
             sqlAddPayment,
             [
-              payment_date,
+              dateFormatted,
               payment_time,
               payment_course_id,
               payment_amount,
