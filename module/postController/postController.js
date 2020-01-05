@@ -24,7 +24,7 @@ const addPost = (req, res) => {
     let post_time = time_gmt7;
     let subject_id = req.body.subject_id;
     let level_id = req.body.level_id;
-    let degree = req.body.post_degree;
+    let price = req.body.post_price;
     let place = req.body.place;
     let sexName = req.body.sex_id;
     let users_id = req.body.users_id;
@@ -40,7 +40,7 @@ const addPost = (req, res) => {
         break;
     }
 
-    sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id,post_degree, place,sex_id,users_id) VALUES (?,?,?,?, ?, ?, ?,?)`;
+    sqlAddPost = `INSERT INTO post (post_date,post_time, subject_id, level_id,post_price, place,sex_id,users_id) VALUES (?,?,?,?, ?, ?, ?,?)`;
 
     dbConn.query(
       sqlAddPost,
@@ -49,7 +49,7 @@ const addPost = (req, res) => {
         post_time,
         subject_id,
         level_id,
-        degree,
+        price,
         place,
         sexId,
         users_id
@@ -90,7 +90,7 @@ const fetchPost = (req, res) => {
     let level_id = req.body.level_id;
 
     if (sex_id === "" && subject_id === "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -101,7 +101,7 @@ const fetchPost = (req, res) => {
 
       console.log("1");
     } else if (sex_id === "" && level_id === "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -111,7 +111,7 @@ const fetchPost = (req, res) => {
         ORDER BY post.post_date DESC`;
       console.log("2");
     } else if (subject_id == "" && level_id == "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -121,7 +121,7 @@ const fetchPost = (req, res) => {
         ORDER BY post.post_date DESC`;
       console.log("3");
     } else if (sex_id === "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -131,7 +131,7 @@ const fetchPost = (req, res) => {
         ORDER BY post.post_date DESC`;
       console.log("4");
     } else if (subject_id === "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -141,7 +141,7 @@ const fetchPost = (req, res) => {
         ORDER BY post.post_date DESC`;
       console.log("5");
     } else if (level_id === "") {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -151,7 +151,7 @@ const fetchPost = (req, res) => {
         ORDER BY post.post_date DESC`;
       console.log("6");
     } else {
-      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_degree,profile_name,profile_lastname,sex_name_th FROM post 
+      sqlFetchPost = `SELECT post_id,post_date,subject_name_th,level_name_th,place,post_price,profile_name,profile_lastname,sex_name_th FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -246,7 +246,7 @@ const fetchDetailtutor = (req, res) => {
   try {
     let postId = req.body.post_id;
 
-    sqlFetchDetailTutor = `SELECT profile_image,profile_name,profile_lastname,sex_name_th,level_name_th,subject_name_th,post_degree,place,profile_phone,post.users_id,post.subject_id
+    sqlFetchDetailTutor = `SELECT profile_image,profile_name,profile_lastname,sex_name_th,level_name_th,subject_name_th,post_price,place,profile_phone,post.users_id,post.subject_id
         FROM post
         INNER JOIN profile ON post.users_id = profile.users_id
         INNER JOIN level ON post.level_id = level.level_id

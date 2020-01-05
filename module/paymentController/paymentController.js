@@ -1,6 +1,14 @@
 const dbConn = require("../../connectDB");
 const moment = require("moment-timezone");
+var cloudinary = require("cloudinary").v2;
 const publicIp = require("public-ip");
+
+cloudinary.config({
+  cloud_name: "hrzcnxorq",
+  api_key: "262465892499323",
+  api_secret: "rn-KoWOZbT79mbmIhGIgFq3s6tU"
+});
+
 var mv = require("mv");
 
 var formidable = require("formidable");
@@ -35,53 +43,67 @@ const addPayment = (req, res) => {
 
     var date = new Date(payment_date);
     var dateFormatted = moment(date).format("MM/DD/YYYY");
+
+    var public_image = "";
     try {
       var oldpath = files.payment_image.path;
       var newPath = directoryPath + files.payment_image.name;
-      //   console.log(oldpath);
-      //   console.log(newPath);
-      payment_image = url + "/image/" + files.payment_image.name;
+      console.log("OLD PATH = " + oldpath);
+      console.log("NEW PATH = " + newPath);
+      payment_image = newPath;
+      console.log(payment_image);
+
       mv(oldpath, newPath, err => {
         if (err) throw err;
-        try {
-          sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?,?)`;
 
-          dbConn.query(
-            sqlAddPayment,
-            [
-              dateFormatted,
-              payment_time,
-              payment_course_id,
-              payment_amount,
-              payment_name,
-              payment_student_id,
-              payment_tutor_id,
-              payment_image
-            ],
-            (err, rows, result) => {
-              if (err) {
-                res.json({
-                  head: 500,
-                  body: rows,
-                  message: err.message
-                });
-              } else {
-                res.json({
-                  head: 200,
-                  body: rows,
-                  message: "การชำระเงินสำเร็จ"
-                });
-              }
+        cloudinary.uploader.upload(payment_image, (err, result) => {
+          if (err) {
+            console.log("Cloudinary " + err.message);
+          } else {
+            console.log(result);
+            public_image = result.url;
+
+            try {
+              sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?,?)`;
+
+              dbConn.query(
+                sqlAddPayment,
+                [
+                  dateFormatted,
+                  payment_time,
+                  payment_course_id,
+                  payment_amount,
+                  payment_name,
+                  payment_student_id,
+                  payment_tutor_id,
+                  public_image
+                ],
+                (err, rows, result) => {
+                  if (err) {
+                    res.json({
+                      head: 500,
+                      body: rows,
+                      message: err.message
+                    });
+                  } else {
+                    res.json({
+                      head: 200,
+                      body: rows,
+                      message: "การชำระเงินสำเร็จ"
+                    });
+                  }
+                }
+              );
+            } catch (error) {
+              console.log(error.message);
+              res.json({
+                head: 404,
+                body: rows,
+                message: "กรุณาตรวจสอบรูปแบบ Request"
+              });
             }
-          );
-        } catch (error) {
-          console.log(error.message);
-          res.json({
-            head: 404,
-            body: rows,
-            message: "กรุณาตรวจสอบรูปแบบ Request"
-          });
-        }
+          }
+        });
       });
     } catch (error) {
       console.log(error.message);
