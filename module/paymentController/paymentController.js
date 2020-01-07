@@ -112,4 +112,51 @@ const addPayment = (req, res) => {
   });
 };
 
-module.exports = { addPayment };
+const fetchPayment = (req, res) => {
+  console.log(req.body);
+
+  try {
+    var user_id = req.body.user_id;
+    var role_id = req.body.role_id;
+
+    switch (role_id) {
+      case 1:
+        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,payment_image,paymentStatus_id
+                    FROM payment 
+                    INNER JOIN subject ON payment.payment_course_id =subject.subject_id
+                    INNER JOIN profile ON payment.payment_student_id = profile.profile_id
+                    WHERE profile.profile_id = ${user_id}`;
+        break;
+      default:
+        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,payment_image,paymentStatus_id
+                    FROM payment 
+                    INNER JOIN subject ON payment.payment_course_id =subject.subject_id
+                    INNER JOIN profile ON payment.payment_tutor_id = profile.profile_id
+                    WHERE profile.profile_id = ${user_id}`;
+        break;
+    }
+    try {
+      dbConn.query(sqlFetchPayment, (err, rows, result) => {
+        if (rows.length === 0) {
+          res.json({
+            head: 400,
+            body: rows,
+            message: "ไม่พบข้อมูลการชำระเงิน"
+          });
+        } else {
+          res.json({
+            head: 200,
+            body: rows,
+            message: "ข้อมูลการชำระเงิน"
+          });
+        }
+      });
+    } catch (error) {
+      console.log("fetchPayment Error =" + error.message);
+    }
+  } catch (error) {
+    console.log("fetchPayment Error =" + error.message);
+  }
+};
+
+module.exports = { addPayment, fetchPayment };
