@@ -121,14 +121,14 @@ const fetchPayment = (req, res) => {
 
     switch (role_id) {
       case "1":
-        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id
+        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
                     FROM payment 
                     INNER JOIN subject ON payment.payment_course_id =subject.subject_id
                     INNER JOIN profile ON payment.payment_student_id = profile.profile_id
                     WHERE profile.profile_id = ${user_id}`;
         break;
       default:
-        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id
+        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
                     FROM payment 
                     INNER JOIN subject ON payment.payment_course_id =subject.subject_id
                     INNER JOIN profile ON payment.payment_tutor_id = profile.profile_id
