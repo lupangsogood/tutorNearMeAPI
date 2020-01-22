@@ -50,6 +50,9 @@ app.use("/tutorNearMe/api/post", post);
 var payment = require("./routes/payment.js");
 app.use("/tutorNearMe/api/payment", payment);
 
+var comment = require("./routes/comment");
+app.use("/tutorNearMe/api/comment", comment);
+
 app.post("/uploads", multer({ storage: storage }).single("file"));
 app.use(upload.array());
 
