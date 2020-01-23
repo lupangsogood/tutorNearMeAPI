@@ -1,8 +1,10 @@
-var express = require("express");
-var router = express.Router();
+var express = require("express")
+var router = express.Router()
 
-var commentController = require("../module/commentController/commentController");
+var commentController = require("../module/commentController/commentController")
 
-router.post("/addComment", commentController);
+router.post("/addComment", commentController.addComment)
 
-module.exports = { router };
+router.post("/fetchComment", commentController.fetchComment)
+
+module.exports = router
