@@ -52,10 +52,10 @@ const fetchComment = (req, res) => {
 
   try {
     let postId = req.body.post_id;
-
     sqlFethComment = `SELECT profile.profile_name,profile.profile_lastname,profile.profile_image,comment.comment_data,comment.comment_time
         FROM comment 
-        INNER JOIN profile ON comment.users_id = profile.users_id`;
+        INNER JOIN profile ON comment.users_id = profile.users_id
+        WHERE comment.post_id = ${postId}`;
     dbConn.query(sqlFethComment, (err, rows, result) => {
       if (err) {
         res.json({
