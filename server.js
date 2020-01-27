@@ -38,16 +38,9 @@ const PORT = process.env.PORT || 5624
 var blank = require("./blank")
 
 app.use("", blank)
-
 ///////////////////////////// Project API /////////////////
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-
-app.post("/uploads", multer({ storage: storage }).single("file"))
-app.use(upload.array())
-
-app.use(express.static(path.join(__dirname, "public")))
-app.use("/image", express.static(path.join(__dirname, "upload")))
 
 var user = require("./routes/user.js")
 app.use("/tutorNearMe/api/user", user)
@@ -60,6 +53,12 @@ app.use("/tutorNearMe/api/payment", payment)
 
 var comment = require("./routes/comment.js")
 app.use("/tutorNearMe/api/comment", comment)
+
+app.post("/uploads", multer({ storage: storage }).single("file"))
+app.use(upload.array())
+
+app.use(express.static(path.join(__dirname, "public")))
+app.use("/image", express.static(path.join(__dirname, "upload")))
 
 app.listen(PORT)
 
