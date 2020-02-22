@@ -279,4 +279,89 @@ const fetchDetailtutor = (req, res) => {
   }
 }
 
-module.exports = { addPost, fetchPost, fetchPostTutor, fetchDetailtutor }
+const editPost = (req, res) => {
+  console.log(req.body)
+
+  try {
+    let post_id = req.body.post_id
+    let post_date = date_gmt7
+    let post_time = time_gmt7
+    let subject_id = req.body.subject_id
+    let level_id = req.body.level_id
+    let price = req.body.post_price
+    let place = req.body.place
+
+    console.log(post_date)
+    sqlEditPost = `UPDATE post 
+                 SET post_date = '${post_date}',
+                  post_time = '${post_time}',
+                  subject_id = ${subject_id},
+                  level_id = ${level_id},
+                  post_price = ${price},
+                  place = '${place}'
+                  WHERE post_id = ${post_id} `
+
+    dbConn.query(sqlEditPost, (err, rows, result) => {
+      if (err) {
+        res.json({
+          head: 500,
+          body: rows,
+          message: err.message
+        })
+      } else {
+        res.json({
+          head: 200,
+          body: rows,
+          message: "แก้ไขโพสต์สำเร็จ"
+        })
+      }
+    })
+  } catch (error) {
+    console.log(error.message)
+    res.json({
+      head: 404,
+      body: rows,
+      message: "กรุณาตรวจสอบรูปแบบ Request"
+    })
+  }
+}
+
+const deletePost = (req, res) => {
+  console.log(req.body)
+
+  try {
+    let post_id = req.body.post_id
+    sqlDeletePost = `DELETE FROM post WHERE post_id = ${post_id}`
+
+    dbConn.query(sqlDeletePost, (err, rows, result) => {
+      if (err) {
+        res.json({
+          head: 500,
+          body: rows,
+          message: err.message
+        })
+      } else {
+        res.json({
+          head: 200,
+          body: rows,
+          message: "ลบโพสต์สำเร็จ"
+        })
+      }
+    })
+  } catch (error) {
+    console.log(error.message)
+    res.json({
+      head: 404,
+      body: rows,
+      message: "กรุณาตรวจสอบรูปแบบ Request"
+    })
+  }
+}
+module.exports = {
+  addPost,
+  fetchPost,
+  fetchPostTutor,
+  fetchDetailtutor,
+  editPost,
+  deletePost
+}
