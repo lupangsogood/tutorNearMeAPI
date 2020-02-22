@@ -82,7 +82,6 @@ const addPost = (req, res) => {
 }
 
 //FETCH
-
 const fetchPost = (req, res) => {
   console.log(req.body)
   try {
