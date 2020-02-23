@@ -41,9 +41,6 @@ const addPayment = (req, res) => {
     let payment_tutor_id = fields.payment_tutor_id
     let payment_image = ""
 
-    var date = new Date(payment_date)
-    var dateFormatted = moment(date).format("MM/DD/YYYY")
-
     var public_image = ""
     try {
       var oldpath = files.payment_image.path
@@ -69,7 +66,7 @@ const addPayment = (req, res) => {
               dbConn.query(
                 sqlAddPayment,
                 [
-                  dateFormatted,
+                  payment_date,
                   payment_time,
                   payment_course_id,
                   payment_amount,
@@ -169,4 +166,79 @@ const fetchPayment = (req, res) => {
   }
 }
 
-module.exports = { addPayment, fetchPayment }
+const fetchCourseHaveStudent = (req, res) => {
+  try {
+    let tutor_id = req.body.tutor_id
+    sqlFetchCourse = `SELECT  DISTINCT
+		    post_id,post_date,subject_id,level_id,post_price,place
+      	FROM payment 
+      	INNER JOIN post ON post.post_id = payment.payment_course_id
+		    WHERE payment.payment_tutor_id = ${tutor_id}`
+
+    dbConn.query(sqlFetchCourse, (error, rows, result) => {
+      if (rows.length === 0) {
+        res.json({
+          head: 400,
+          body: rows,
+          message: "ไม่พบข้อมูลคอร์สเรียนที่ชำระเงิน"
+        })
+      } else {
+        res.json({
+          head: 200,
+          body: rows,
+          message: "ข้อมูลคอร์สเรียน"
+        })
+      }
+    })
+  } catch (error) {
+    console.log(error.message)
+    res.json({
+      head: 404,
+      body: rows,
+      message: "กรุณาตรวจสอบรูปแบบ Request"
+    })
+  }
+}
+
+const fetchStudentInCourse = (req, res) => {
+  console.log(req.body)
+
+  try {
+    let payment_id = req.body.payment_id
+
+    sqlFetchStudent = `SELECT DISTINCT
+        profile_name,profile_email,profile_image,profile_phone,sex_id
+        FROM payment 
+        INNER JOIN profile ON payment.payment_student_id = profile.users_id
+        WHERE payment.payment_course_id = ${payment_id}`
+
+    dbConn.query(sqlFetchStudent, (error, rows, result) => {
+      if (rows.length === 0) {
+        res.json({
+          head: 400,
+          body: rows,
+          message: "ไม่พบข้อมูลนักเรียน"
+        })
+      } else {
+        res.json({
+          head: 200,
+          body: rows,
+          message: "ข้อมูลนักเรียน"
+        })
+      }
+    })
+  } catch (error) {
+    console.log(error.message)
+    res.json({
+      head: 404,
+      body: rows,
+      message: "กรุณาตรวจสอบรูปแบบ Request"
+    })
+  }
+}
+module.exports = {
+  addPayment,
+  fetchPayment,
+  fetchStudentInCourse,
+  fetchCourseHaveStudent
+}

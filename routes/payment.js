@@ -1,13 +1,16 @@
-var express = require("express");
-const bodyParser = require("body-parser");
+var express = require("express")
+const bodyParser = require("body-parser")
 
-var router = express.Router();
+var router = express.Router()
 
-var paymentController = require("../module/paymentController/paymentController");
+var paymentController = require("../module/paymentController/paymentController")
 
-router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.urlencoded({ extended: false }))
 
-router.post("/fetchPayment", paymentController.fetchPayment);
-router.post("/addPayment", paymentController.addPayment);
+router.post("/fetchPayment", paymentController.fetchPayment)
+router.post("/addPayment", paymentController.addPayment)
 
-module.exports = router;
+router.post("/fetchCourseHave", paymentController.fetchCourseHaveStudent)
+router.post("fetchStudentIn", paymentController.fetchStudentInCourse)
+
+module.exports = router

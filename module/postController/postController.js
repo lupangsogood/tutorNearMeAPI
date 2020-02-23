@@ -7,14 +7,6 @@ const time_gmt7 = moment()
   .tz("Asia/Bangkok")
   .format("HH:mm:ss")
 
-// dbConn.getConnection(function(err){
-//     if (err) {
-//         console.log(err.stack)
-//         throw err
-//     }
-//     console.log("connected")
-// });
-
 //ADD POST
 const addPost = (req, res) => {
   console.log(req.body)
@@ -80,7 +72,6 @@ const addPost = (req, res) => {
     })
   }
 }
-
 //FETCH
 const fetchPost = (req, res) => {
   console.log(req.body)
@@ -357,6 +348,7 @@ const deletePost = (req, res) => {
     })
   }
 }
+
 module.exports = {
   addPost,
   fetchPost,
