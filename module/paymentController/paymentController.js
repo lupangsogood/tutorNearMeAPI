@@ -123,18 +123,18 @@ const fetchPayment = (req, res) => {
     var role_id = req.body.role_id
     switch (role_id) {
       case "1":
-        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
+        sqlFetchPayment = `SELECT payment_id,payment_course_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
                     FROM payment 
                     INNER JOIN subject ON payment.payment_course_id =subject.subject_id
-                    INNER JOIN profile ON payment.payment_student_id = profile.profile_id
-                    WHERE profile.profile_id = ${user_id}`
+                    INNER JOIN profile ON payment.payment_student_id = profile.users_id
+                    WHERE profile.users_id = ${user_id}`
         break
       case "2":
-        sqlFetchPayment = `SELECT payment_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
+        sqlFetchPayment = `SELECT payment_id,payment_course_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id
                     FROM payment 
                     INNER JOIN subject ON payment.payment_course_id =subject.subject_id
-                    INNER JOIN profile ON payment.payment_tutor_id = profile.profile_id
-                    WHERE profile.profile_id = ${user_id}`
+                    INNER JOIN profile ON payment.payment_tutor_id = profile.users_id
+                    WHERE profile.users_id = ${user_id}`
 
         break
 
@@ -204,13 +204,13 @@ const fetchStudentInCourse = (req, res) => {
   console.log(req.body)
 
   try {
-    let payment_id = req.body.payment_id
+    let post_id = req.body.post_id
 
     sqlFetchStudent = `SELECT DISTINCT
         profile_name,profile_email,profile_image,profile_phone,sex_id
         FROM payment 
         INNER JOIN profile ON payment.payment_student_id = profile.users_id
-        WHERE payment.payment_course_id = ${payment_id}`
+        WHERE payment.payment_course_id = ${post_id}`
 
     dbConn.query(sqlFetchStudent, (error, rows, result) => {
       if (rows.length === 0) {

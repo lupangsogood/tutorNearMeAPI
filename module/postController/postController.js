@@ -189,7 +189,7 @@ const fetchPostTutor = (req, res) => {
   try {
     let usersId = req.body.tutorId
 
-    sqlFetchPostTutor = `SELECT post_id,post_date,subject_name_th,level_name_th,place,profile_name,profile_lastname,sex_name_th FROM post 
+    sqlFetchPostTutor = `SELECT post_id,post_date,subject_name_th,level_name_th,place,profile_name,profile_lastname,sex_name_th,post_price FROM post 
         INNER JOIN level ON  post.level_id = level.level_id 
         INNER JOIN subject ON post.subject_id = subject.subject_id 
         INNER JOIN profile ON post.users_id = profile.users_id 
@@ -277,32 +277,35 @@ const editPost = (req, res) => {
     let post_id = req.body.post_id
     let post_date = date_gmt7
     let post_time = time_gmt7
-    let subject_id = req.body.subject_id
-    let level_id = req.body.level_id
+    // let subject_id = req.body.subject_id
+    // let level_id = req.body.level_id
     let price = req.body.post_price
-    let place = req.body.place
+    let placeEdit = req.body.place
 
     console.log(post_date)
     sqlEditPost = `UPDATE post 
                  SET post_date = '${post_date}',
                   post_time = '${post_time}',
-                  subject_id = ${subject_id},
-                  level_id = ${level_id},
                   post_price = ${price},
-                  place = '${place}'
+                  place = '${placeEdit}'
                   WHERE post_id = ${post_id} `
 
     dbConn.query(sqlEditPost, (err, rows, result) => {
       if (err) {
+        console.log({
+          head: 500,
+          body: [],
+          message: err.message
+        })
         res.json({
           head: 500,
-          body: rows,
+          body: [],
           message: err.message
         })
       } else {
         res.json({
           head: 200,
-          body: rows,
+          body: [],
           message: "แก้ไขโพสต์สำเร็จ"
         })
       }
@@ -334,7 +337,7 @@ const deletePost = (req, res) => {
       } else {
         res.json({
           head: 200,
-          body: rows,
+          body: [],
           message: "ลบโพสต์สำเร็จ"
         })
       }

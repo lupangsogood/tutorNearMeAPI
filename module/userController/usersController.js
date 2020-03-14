@@ -327,15 +327,10 @@ const editProfile = (req, res) => {
   var form = new formidable.IncomingForm()
   form.parse(req, (err, fields, files) => {
     console.log(fields)
-
     let profileNameReqBody = fields.profile_name
     let profileLastNameReqBody = fields.profile_lastname
     let profileEmailReqBody = fields.profile_email
     let profileImageReqBody = ""
-    let profilePhoneReqBody = fields.profile_phone
-    let profileLevelIdReqBody = fields.level_id
-    let profileSexIdReqBody = fields.sex_id
-    let profileRoleIdReqBody = fields.role_id
     let profileUserIdReqBody = fields.users_id
 
     let profileImage = ""
@@ -343,73 +338,162 @@ const editProfile = (req, res) => {
     try {
       var oldpath = files.profile_image.path
       var newPath = directoryPath + files.profile_image.name
-
       profileImage = newPath
       mv(oldpath, newPath, err => {
-        if (err) throw err
+        if (err) {
+          console.log(oldpath)
+          console.log(newPath)
+          console.log(err.message)
 
-        cloudinary.uploader.upload(profileImage, (err, result) => {
-          if (err) {
-            console.log("Cloudinary " + err.message)
-          } else {
-            console.log(result)
-            public_image = result.url
+          try {
+            sqlEditProfile = `UPDATE  profile 
+              SET profile_name='${profileNameReqBody}' ,
+              profile_lastname = '${profileLastNameReqBody}',
+              profile_email = '${profileEmailReqBody}'
+              WHERE users_id = ${profileUserIdReqBody}`
+            // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
 
-            try {
-              sqlEditProfile = `UPDATE  profile 
+            dbConn.query(sqlEditProfile, (err, rows, result) => {
+              if (err) {
+                console.log(err)
+                res.json({
+                  head: 500,
+                  body: [],
+                  message: err.message
+                })
+              } else {
+                // console.log(rows)
+                sqlFetchProfile = `Select profile_id,
+                            profile_name,profile_lastname,profile_email,profile_image,profile_phone,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${profileUserIdReqBody}" ORDER BY profile_id DESC LIMIT 1 `
+                dbConn.query(sqlFetchProfile, (err, rows, result) => {
+                  if (rows.length === 0) {
+                    res.json({
+                      head: 200,
+                      body: rows,
+                      message: "แก้ไขข้อมูลไม่สำเร็จ"
+                    })
+                  } else {
+                    res.json({
+                      head: 200,
+                      body: rows,
+                      message: "แก้ไขข้อมูลสำเร็จ"
+                    })
+                  }
+                })
+              }
+            })
+          } catch (error) {
+            res.json({
+              head: 404,
+              body: [],
+              message: error.message
+            })
+          }
+        } else {
+          cloudinary.uploader.upload(profileImage, (err, result) => {
+            if (err) {
+              console.log("Cloudinary " + err.message)
+            } else {
+              console.log(result)
+              public_image = result.url
+
+              try {
+                sqlEditProfile = `UPDATE  profile 
               SET profile_name='${profileNameReqBody}' ,
               profile_lastname = '${profileLastNameReqBody}',
               profile_email = '${profileEmailReqBody}',
-              profile_image = '${public_image}',
-              profile_phone = '${profilePhoneReqBody}',
-              level_id= ${profileLevelIdReqBody},
-              sex_id= ${profileSexIdReqBody},
-              role_id= ${profileRoleIdReqBody}
+              profile_image = '${public_image}'
               WHERE users_id = ${profileUserIdReqBody}`
-              // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
+                // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
 
-              dbConn.query(sqlEditProfile, (err, rows, result) => {
-                if (err) {
-                  console.log(err)
-                  res.json({
-                    head: 500,
-                    body: [],
-                    message: err.message
-                  })
-                } else {
-                  // console.log(rows)
-                  sqlFetchProfile = `Select profile_id,
+                dbConn.query(sqlEditProfile, (err, rows, result) => {
+                  if (err) {
+                    console.log(err)
+                    res.json({
+                      head: 500,
+                      body: [],
+                      message: err.message
+                    })
+                  } else {
+                    // console.log(rows)
+                    sqlFetchProfile = `Select profile_id,
                             profile_name,profile_lastname,profile_email,profile_image,profile_phone,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${profileUserIdReqBody}" ORDER BY profile_id DESC LIMIT 1 `
-                  dbConn.query(sqlFetchProfile, (err, rows, result) => {
-                    if (rows.length === 0) {
-                      res.json({
-                        head: 200,
-                        body: rows,
-                        message: "แก้ไขข้อมูลไม่สำเร็จ"
-                      })
-                    } else {
-                      res.json({
-                        head: 200,
-                        body: rows,
-                        message: "แก้ไขข้อมูลสำเร็จ"
-                      })
-                    }
-                  })
-                }
-              })
-            } catch (error) {
-              res.json({
-                head: 404,
-                body: [],
-                message: error.message
-              })
+                    dbConn.query(sqlFetchProfile, (err, rows, result) => {
+                      if (rows.length === 0) {
+                        res.json({
+                          head: 200,
+                          body: rows,
+                          message: "แก้ไขข้อมูลไม่สำเร็จ"
+                        })
+                      } else {
+                        res.json({
+                          head: 200,
+                          body: rows,
+                          message: "แก้ไขข้อมูลสำเร็จ"
+                        })
+                      }
+                    })
+                  }
+                })
+              } catch (error) {
+                res.json({
+                  head: 404,
+                  body: [],
+                  message: error.message
+                })
+              }
             }
-          }
-        })
+          })
+        }
       })
     } catch (error) {
-      console.log(error.message)
-      console.log("Upload Image is an Interupted")
+      // console.log(error.message)
+      // console.log("Upload Image is an Interupted")
+
+      try {
+        sqlEditProfile = `UPDATE  profile 
+              SET profile_name='${profileNameReqBody}' ,
+              profile_lastname = '${profileLastNameReqBody}',
+              profile_email = '${profileEmailReqBody}'
+              WHERE users_id = ${profileUserIdReqBody}`
+        // sqlAddProfile = `INSERT INTO profile VALUES (?,?,?,?,?,?,?)`
+
+        dbConn.query(sqlEditProfile, (err, rows, result) => {
+          if (err) {
+            console.log(err)
+            res.json({
+              head: 500,
+              body: [],
+              message: err.message
+            })
+          } else {
+            // console.log(rows)
+            sqlFetchProfile = `Select profile_id,
+                            profile_name,profile_lastname,profile_email,profile_image,profile_phone,sex_name_th,role_name_th,users_id from profile INNER JOIN sex ON profile.sex_id = sex.sex_id INNER JOIN role ON profile.role_id = role.role_id where users_id = "${profileUserIdReqBody}" ORDER BY profile_id DESC LIMIT 1 `
+            dbConn.query(sqlFetchProfile, (err, rows, result) => {
+              if (rows.length === 0) {
+                res.json({
+                  head: 200,
+                  body: rows,
+                  message: "แก้ไขข้อมูลไม่สำเร็จ"
+                })
+              } else {
+                res.json({
+                  head: 200,
+                  body: rows,
+                  message: "แก้ไขข้อมูลสำเร็จ"
+                })
+              }
+            })
+          }
+        })
+      } catch (error) {
+        res.json({
+          head: 404,
+          body: [],
+          message: error.message
+        })
+      }
     }
   })
 }

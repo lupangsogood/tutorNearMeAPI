@@ -11,6 +11,6 @@ router.post("/fetchPayment", paymentController.fetchPayment)
 router.post("/addPayment", paymentController.addPayment)
 
 router.post("/fetchCourseHave", paymentController.fetchCourseHaveStudent)
-router.post("fetchStudentIn", paymentController.fetchStudentInCourse)
+router.post("/fetchStudentIn", paymentController.fetchStudentInCourse)
 
 module.exports = router

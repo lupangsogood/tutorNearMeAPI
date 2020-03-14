@@ -12,8 +12,8 @@ try {
   router.post("/fetchPost", postController.fetchPost)
   router.post("/tutor/fetchPost", postController.fetchPostTutor)
   router.post("/tutor/fetchDetail", postController.fetchDetailtutor)
-  router.post("/editPost", postController.editPost)
-  router.post("/deletePost", postController.deletePost)
+  router.post("/tutor/editPost", postController.editPost)
+  router.post("/tutor/deletePost", postController.deletePost)
 } catch (error) {
   console.log(error)
 }

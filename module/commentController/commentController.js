@@ -13,7 +13,7 @@ const fetchComment = (req, res) => {
 
   try {
     let postId = req.body.post_id
-    sqlFethComment = `SELECT profile.profile_name,profile.profile_lastname,profile.profile_image,comment.comment_data,comment.comment_time
+    sqlFethComment = `SELECT comment_id,profile.profile_name,profile.profile_lastname,profile.profile_image,comment.comment_data,comment.comment_time
         FROM comment 
         INNER JOIN profile ON comment.users_id = profile.users_id
         INNER JOIN post ON comment.post_id = post.post_id
@@ -86,15 +86,15 @@ const editComment = (req, res) => {
   console.log(date_gmt7 + time_gmt7)
 
   try {
-    let postId = req.body.post_id
+    let comment_id = req.body.comment_id
     let commentData = req.body.comment_data
     let usersId = req.body.users_id
     let commentTime = `${date_gmt7} ${time_gmt7}`
     sqlEditComment = `UPDATE comment
       SET comment_data ='${commentData}',
-          comment_time ='${commentTime}',
-          users_id = ${usersId}
-          WHERE post_id = ${postId}  `
+          comment_time ='${commentTime}'
+
+          WHERE comment_id = ${comment_id}  `
     dbConn.query(sqlEditComment, (err, rows, result) => {
       if (err) {
         res.json({
@@ -138,7 +138,7 @@ const deleteComment = (req, res) => {
         res.json({
           head: 200,
           body: [],
-          message: "แก้ไขคอมเมนต์สำเร็จ"
+          message: "ลบคอมเมนต์สำเร็จ"
         })
       }
     })
