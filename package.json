@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "expressjs": "^1.0.1",
     "external-ip": "^2.1.1",
+    "fcm-node": "^1.5.2",
     "filestorage": "^1.7.1",
     "formidable": "^1.2.1",
     "moment": "^2.24.0",

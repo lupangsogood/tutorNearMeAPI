@@ -4,9 +4,13 @@ var mv = require("mv")
 var formidable = require("formidable")
 var fs = require("fs")
 const path = require("path")
-
 const uploadPath = "/Users/anusitpoyen/Documents/tutorMeetupAPI/upload/"
 const directoryPath = path.join(__dirname, "../../upload/")
+
+var FCM = require("fcm-node")
+var serverKey =
+  "AAAA-kC4qPQ:APA91bHSLoQqKVs7VtZevq5sC4l5UcC4ZIPFgX2qpeo3bRT0sgB2n5giuhqdNOSTUIxTTsNFgP7YwZho1k7Yw4rZa761WpmepYc_HIU3gZ_eIIMDECSIyaGQwo4HsnY3Ut38-ZtdjlCs" //put your server key here
+var fcm = new FCM(serverKey)
 // dbConn.getConnection(function(err){
 //     if (err) {
 //         console.log(err.stack)
@@ -498,11 +502,114 @@ const editProfile = (req, res) => {
   })
 }
 
+const keepToken = (req, res) => {
+  console.log(req.body)
+  try {
+    let usersId = req.body.users_id
+    let fcmToken = req.body.fcm_token
+
+    console.log(req.body)
+
+    sqlAddToken = `INSERT INTO token (user_id,fcm_token)  VALUES (?,?)`
+
+    dbConn.query(sqlAddToken, [usersId, fcmToken], (err, rows, result) => {
+      if (err) {
+        console.log(err)
+        res.json({
+          head: 500,
+          body: [],
+          message: err.message
+        })
+      } else {
+        res.json({
+          head: 200,
+          body: [],
+          message: "เพิ่ม Token สำเร็จ"
+        })
+      }
+    })
+  } catch (error) {
+    res.json({
+      head: 404,
+      body: [],
+      message: error.message
+    })
+  }
+}
+
+const sendNotification = (req, res) => {
+  console.log(req.body)
+
+  try {
+    let usersId = req.body.users_id
+
+    sqlFetchToken = `SELECT fcm_token FROM token WHERE user_id = ${usersId}`
+
+    dbConn.query(sqlFetchToken, (err, rows, result) => {
+      if (err) {
+        console.log(err)
+        res.json({
+          head: 500,
+          body: [],
+          message: err.message
+        })
+      } else {
+        console.log(rows.length)
+        if (rows.length === 0) {
+          res.json({
+            head: 500,
+            body: [],
+            message: "ไม่พบข้อมูลส่วนตัว"
+          })
+        } else {
+          var message = {
+            //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+            to: rows,
+            collapse_key: "",
+
+            notification: {
+              title: "Title of your push notification",
+              body: "Body of your push notification"
+            },
+
+            data: {
+              //you can send only notification or only data(or include both)
+              my_key: "my value",
+              my_another_key: "my another value"
+            }
+          }
+
+          fcm.send(message, (err, response) => {
+            if (err) {
+              console.log("Something has gone wrong!  " + err)
+            } else {
+              console.log("Successfully sent with response: ", response)
+            }
+          })
+          res.json({
+            head: 200,
+            body: [],
+            message: "ข้อมูลส่วนตัว"
+          })
+        }
+      }
+    })
+  } catch (error) {
+    res.json({
+      head: 404,
+      body: [],
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
   checkUserLogin,
   fetchProfile,
   addUser,
   addUserProfile,
   editProfile,
-  addUserProfileAndImage
+  addUserProfileAndImage,
+  keepToken,
+  sendNotification
 }
