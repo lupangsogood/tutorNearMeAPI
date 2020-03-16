@@ -562,20 +562,14 @@ const sendNotification = (req, res) => {
             message: "ไม่พบข้อมูลส่วนตัว"
           })
         } else {
+          console.log(rows[0].fcm_token)
           var message = {
             //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-            to: rows,
-            collapse_key: "",
+            to: rows[0].fcm_token,
 
             notification: {
-              title: "Title of your push notification",
-              body: "Body of your push notification"
-            },
-
-            data: {
-              //you can send only notification or only data(or include both)
-              my_key: "my value",
-              my_another_key: "my another value"
+              title: "TutorMeetup",
+              body: "มีข้อความใหม่"
             }
           }
 
