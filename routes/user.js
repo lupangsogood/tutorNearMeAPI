@@ -8,6 +8,7 @@ var userController = require("../module/userController/usersController")
 router.use(bodyParser.urlencoded({ extended: false }))
 
 router.post("/login", userController.checkUserLogin)
+router.post("/fetchProfileData", userController.fetchProfileDataWithPost)
 router.post("/fetchProfile", userController.fetchProfile)
 router.post("/addUser", userController.addUser)
 router.post("/addProfile", userController.addUserProfile)

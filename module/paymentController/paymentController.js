@@ -39,6 +39,7 @@ const addPayment = (req, res) => {
     let payment_name = fields.payment_name
     let payment_student_id = fields.payment_student_id
     let payment_tutor_id = fields.payment_tutor_id
+    let payment_post_id = fields.payment_post_id
     let payment_image = ""
 
     var public_image = ""
@@ -61,7 +62,7 @@ const addPayment = (req, res) => {
             public_image = result.url
 
             try {
-              sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image) VALUES (?,?,?,?,?,?,?,?)`
+              sqlAddPayment = `INSERT INTO payment (payment_date,payment_time,payment_course_id,payment_amount, payment_name, payment_student_id,payment_tutor_id,payment_image,paymentStatus_id) VALUES (?,?,?,?,?,?,?,?,?)`
 
               dbConn.query(
                 sqlAddPayment,
@@ -73,7 +74,8 @@ const addPayment = (req, res) => {
                   payment_name,
                   payment_student_id,
                   payment_tutor_id,
-                  public_image
+                  public_image,
+                  payment_post_id
                 ],
                 (err, rows, result) => {
                   if (err) {
@@ -123,7 +125,7 @@ const fetchPayment = (req, res) => {
     var role_id = req.body.role_id
     switch (role_id) {
       case "1":
-        sqlFetchPayment = `SELECT payment_id,payment_course_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id,payment.payment_tutor_id
+        sqlFetchPayment = `SELECT payment_id,payment_course_id,payment_date,payment_time,subject.subject_name_th,payment_amount,profile.profile_name,profile.profile_lastname,profile.profile_image,payment_image,paymentStatus_id,profile.role_id,payment.payment_tutor_id,payment.paymentStatus_id
                     FROM payment 
                     INNER JOIN subject ON payment.payment_course_id =subject.subject_id
                     INNER JOIN profile ON payment.payment_tutor_id = profile.users_id

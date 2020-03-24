@@ -110,6 +110,59 @@ const fetchProfile = (req, res) => {
   }
 }
 
+const fetchProfileDataWithPost = (req, res) => {
+  console.log(req.body)
+  try {
+    let usersId = req.body.usersId
+    let postId = req.body.postsId
+
+    sqlFetchProfile = `SELECT profile_name,profile_lastname,profile_email,profile_image,sex_name_th,role_id,profile.users_id
+        FROM profile 
+        INNER JOIN users ON profile.users_id = users.users_id 
+        INNER JOIN sex ON profile.sex_id = sex.sex_id
+        WHERE users.users_id = ${usersId}`
+
+    sqlFetchProfileWithPayment = `SELECT DISTinct profile_name,profile_lastname,profile_email,profile_image,profile.level_id,post.level_id AS subject_id,subject_name_th,post_price,post.place,sex_name_th,profile_phone,role_id,profile.users_id
+        FROM payment 
+        INNER JOIN profile ON payment.payment_student_id = profile.users_id 
+        INNER JOIN post ON payment.paymentStatus_id = post.post_id
+        INNER JOIN subject ON payment.payment_course_id = subject.subject_id
+        INNER JOIN sex ON profile.sex_id = sex.sex_id
+        WHERE payment.paymentStatus_id = ${postId} && payment.payment_student_id = ${usersId}`
+    dbConn.query(sqlFetchProfileWithPayment, (err, rows, result) => {
+      if (err) {
+        console.log(err)
+        res.json({
+          head: 500,
+          body: rows,
+          message: err.message
+        })
+      } else {
+        console.log(rows.length)
+        if (rows.length === 0) {
+          res.json({
+            head: 500,
+            body: rows,
+            message: "ไม่พบข้อมูลส่วนตัว"
+          })
+        } else {
+          res.json({
+            head: 200,
+            body: rows,
+            message: "ข้อมูลส่วนตัว"
+          })
+        }
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      head: 404,
+      body: [],
+      message: "กรุณาตรวจสอบรูปแบบ Request"
+    })
+  }
+}
 // ADD
 const addUser = (req, res) => {
   console.log(req.body)
@@ -605,5 +658,6 @@ module.exports = {
   editProfile,
   addUserProfileAndImage,
   keepToken,
-  sendNotification
+  sendNotification,
+  fetchProfileDataWithPost
 }
